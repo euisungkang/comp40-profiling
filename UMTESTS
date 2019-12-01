@@ -1,0 +1,9 @@
+cmov.um
+halt-verbose.um
+io.um
+lprog.um
+map.um
+map_unmap.um
+nand.um
+op.um
+seg.um
