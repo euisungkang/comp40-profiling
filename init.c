@@ -62,10 +62,9 @@ int main(int argc, char *argv[])
                 i--;
         }
         fclose(input);
-
-        uint32_t *id_zero = 0;
+        
         Seq_addhi(um->segmem->m, (void *) m0);
-        Seq_addhi(um->segmem->mapped, (void *) id_zero);
+        um->segmem->seg_count++;
 
 
         uint32_t *zero = Seq_get(um->segmem->m, 0);

@@ -20,8 +20,8 @@ Last Modified: 11/19/2019
 
 typedef struct Segment {
         Seq_T m;
-        Seq_T mapped;
         Seq_T unmapped;
+        int seg_count;
         
 }*Segment;
 
