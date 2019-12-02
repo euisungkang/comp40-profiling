@@ -115,7 +115,7 @@ void input(uint32_t *C)
 
         /* If EOF, then we must fill C with 1s */
         if (in == EOF) {
-                *C = ~0;
+                *C = 1;
         } else {
                 *C = in;
         }
