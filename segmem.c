@@ -21,8 +21,8 @@ Segment Seg_New()
         Segment segmem = malloc(sizeof(struct Segment));
         assert(segmem != NULL);
         segmem -> m = Seq_new(0);
-        segmem -> mapped = Seq_new(0);
         segmem -> unmapped = Seq_new(0);
+        segmem -> seg_count = 0;
         return segmem;
 }
 
@@ -87,8 +87,8 @@ void Seg_Map(Segment segmem, uint32_t *B, uint32_t *C)
                 Seq_put(segmem -> m, id, seg);
 
         }else {
-                id = Seq_length(segmem->mapped);
-                Seq_addhi(segmem->mapped, &id);
+                id = segmem->seg_count;
+                segmem->seg_count++;
                 uint32_t *seg = calloc((size + 1), sizeof(uint32_t));
                 assert(seg != NULL);
                 seg[0] = size + 1;
@@ -118,8 +118,6 @@ void Seg_Free(Segment *segmem)
                 }
         }
         Seq_free(&((*segmem)) -> m);
-
-        Seq_free(&((*segmem) -> mapped));
         while(Seq_length((*segmem) -> unmapped) > 0) {
                 free((uint32_t *)Seq_remhi((*segmem) -> unmapped));
         }
