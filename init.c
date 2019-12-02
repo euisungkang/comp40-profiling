@@ -25,7 +25,7 @@ Last Modified: 11/19/2019
 typedef struct UM {
         Segment segmem;
         uint32_t *registers;
-        uint32_t *counter;
+        uint32_t counter;
 } *UM;
 
 /* Function Prototypes */
@@ -68,25 +68,25 @@ int main(int argc, char *argv[])
 
 
         uint32_t *zero = Seq_get(um->segmem->m, 0);
-        while(*um->counter < zero[0]) {
+        while(um->counter < zero[0]) {
                 short ra = 0, rb = 0, rc = 0;
                 uint32_t value = 0;
                 
-                uint32_t code = (uint32_t) Bitpack_getu(zero[*um -> counter],
+                uint32_t code = (uint32_t) Bitpack_getu(zero[um -> counter],
                                                         4, 28);
                 if(code < 13) {
-                        ra = (uint32_t) Bitpack_getu(zero[*um -> counter], 3, 6);
-                        rb = (uint32_t) Bitpack_getu(zero[*um -> counter], 3, 3);
-                        rc = (uint32_t) Bitpack_getu(zero[*um -> counter], 3, 0);
+                        ra = (uint32_t) Bitpack_getu(zero[um -> counter], 3, 6);
+                        rb = (uint32_t) Bitpack_getu(zero[um -> counter], 3, 3);
+                        rc = (uint32_t) Bitpack_getu(zero[um -> counter], 3, 0);
                 }else {
-                        ra = (uint32_t) Bitpack_getu(zero[*um -> counter], 3, 25);
-                        value = (uint32_t) Bitpack_getu(zero[*um -> counter],
+                        ra = (uint32_t) Bitpack_getu(zero[um -> counter], 3, 25);
+                        value = (uint32_t) Bitpack_getu(zero[um -> counter],
                                                         25, 0);
                 }
 
                 run_instructions(um, code, ra, rb, rc, value);
                 if(code != 12) {
-                        (*um->counter)++;
+                        (um->counter)++;
                 } else {
                     zero = Seq_get(um->segmem->m, 0);
                 }
@@ -101,8 +101,7 @@ UM UM_new()
         UM um = (UM) malloc(sizeof(struct UM));
         um -> segmem = Seg_New();
         um -> registers = calloc(8, sizeof(uint32_t));
-        um -> counter = malloc(sizeof(uint32_t));
-        *(um -> counter) = 1;
+        um -> counter = 1;
         return um;
 }
 
@@ -161,7 +160,7 @@ void run_instructions(UM um, short opcode, short A, short B,
                         input(&um -> registers[C]);
                         break;
                 case 12:
-                        load_program(um -> segmem, (um -> counter), &um ->
+                        load_program(um -> segmem, &um -> counter, &um ->
                                      registers[B], &um -> registers[C]);
                         break;
                 case 13:
@@ -180,6 +179,5 @@ void UM_free(UM *um)
 {
     Seg_Free(&((*um) -> segmem));
     free((*um) -> registers);
-    free((*um) -> counter);
     free(*um);
 }
