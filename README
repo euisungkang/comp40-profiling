@@ -7,7 +7,9 @@ Starting Point:
     We started profiling with a working version of our UM assignment. The
     starting code works with all um tests includuing sandmark.
 
-
+Machine Used:
+    Halligan 116e used to run tests.
+    Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
 
 
 
