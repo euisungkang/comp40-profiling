@@ -109,15 +109,14 @@ void input(uint32_t *C)
            to check if input is in desired range. Compilation error
            if we do */
 
+        if (in == '\n') {
+                in = (char) getc(stdin);
+        } 
+
         /* If EOF, then we must fill C with 1s */
         if (in == EOF) {
                 *C = ~0;
-        }
-
-        else {
-                if(in == '\n') {
-                        input(C);
-                }
+        } else {
                 *C = in;
         }
 }

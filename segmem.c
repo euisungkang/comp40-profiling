@@ -119,9 +119,24 @@ void Seg_Free(Segment *segmem)
         }
         Seq_free(&((*segmem)) -> m);
         while(Seq_length((*segmem) -> unmapped) > 0) {
+                //printf("Inside unmapped free");
                 free((uint32_t *)Seq_remhi((*segmem) -> unmapped));
         }
         Seq_free(&((*segmem) -> unmapped));
 
         free(*segmem);
+
+        /*
+                while(Seq_length((*segmem) -> m) > 0 || Seq_length((*segmem) -> unmapped) > 0) {
+                if (Seq_length((*segmem) -> m) > 0) {
+                        uint32_t *temp = (uint32_t *)Seq_remhi((*segmem) -> m);
+                        if (temp != NULL) {
+                                free(temp);
+                        }
+                }
+                if (Seq_length((*segmem) -> unmapped) > 0) {
+                        free((uint32_t *)Seq_remhi((*segmem) -> unmapped));
+                }
+        }
+        */
 }
