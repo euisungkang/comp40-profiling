@@ -1,0 +1,33 @@
+UNBLACKEDGES
+
+Please put answers to questions here.
+
+  1. What fraction of time is spent in I/O as compared with removing
+     black edges?
+      About 3/5 spent on I/O.
+      2/5 for removing black edges
+  
+  2. How long does
+  
+        time ./unblackedges 
+  
+     take?
+  
+     0.014 seconds
+
+  3. After making changes requested in the lab handout (steps 1-4), what
+     happened to the total time?
+
+      0.010s
+      The time it took to run the program reduced by 1/3 (0.33%)
+  
+  4. What happened to the fraction of time spent in Bit_put?
+
+      It decreased very slightly. Approx. 0.04%
+
+  
+  5. Since the implementation of Bit_put has not been improved, what has
+     changed?
+  
+      We've altered the data structure to use queues. Thus, the process
+      requires less calls to memory to finish.
