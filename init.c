@@ -112,8 +112,9 @@ void run_instructions(UM um, short opcode, short A, short B,
 {
         switch(opcode) {
                 case 0:
-                        cond_move(&um -> registers[A], &um -> registers[B],
-                                  &um -> registers[C]);
+                        if (um -> registers[C] != 0) {
+                                um -> registers[A] = um -> registers[B];
+                        }
                         break;
                 case 1:
                         load(um -> segmem, &um -> registers[A],
@@ -137,7 +138,7 @@ void run_instructions(UM um, short opcode, short A, short B,
                         break;
                 case 7:
                         UM_free(&um);
-                        halt();
+                        exit(EXIT_SUCCESS);
                         break;
                 case 8:
                         map(um -> segmem, &um -> registers[B],
@@ -147,17 +148,26 @@ void run_instructions(UM um, short opcode, short A, short B,
                         unmap(um -> segmem, &um -> registers[C]);
                         break;
                 case 10:
-                        output(&um -> registers[C]);
+                        printf("%c", (char)um -> registers[C]);
                         break;
                 case 11:
-                        input(&um -> registers[C]);
+                        ;
+                        char in = (char) getc(stdin);
+                        if (in == '\n') {
+                                in = (char) getc(stdin);
+                        }
+                        if (in == EOF) {
+                                um -> registers[C] = 1;
+                                break;
+                        }
+                        um -> registers[C] = in;
                         break;
                 case 12:
                         load_program(um -> segmem, &um -> counter, &um ->
                                      registers[B], &um -> registers[C]);
                         break;
                 case 13:
-                        load_value(value, &um -> registers[A]);
+                        um -> registers[A] = value;
                         break;
                 default:
                         fprintf(stderr, "Invalid Instruction\n");

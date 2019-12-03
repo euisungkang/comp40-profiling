@@ -92,10 +92,6 @@ void load_program(Segment segmem, uint32_t *counter, uint32_t *B, uint32_t *C)
 
         *counter = *C + 1;
 }
-void load_value(uint32_t value, uint32_t *A)
-{
-        *A = value;
-}
 
 ////////////////////////
 /* Mapping Operations */
@@ -136,52 +132,4 @@ void unmap(Segment segmem, uint32_t *C)
         free(unused);
         Seq_put(segmem -> m, *id, NULL);
         Seq_addhi(segmem -> unmapped, (void *) id);
-}
-
-/* I/O Operations */
-/* Input: register C
-   Command #11 in spec. Gets a char from stdin, checks for EOF, then sets it
-   to C */
-void input(uint32_t *C)
-{
-        char in = (char) getc(stdin);
-
-        /* chars are defaultly limited to range of 0 ~ 255. Thus, no need
-           to check if input is in desired range. Compilation error
-           if we do */
-
-        if (in == '\n') {
-                in = (char) getc(stdin);
-        } 
-
-        /* If EOF, then we must fill C with 1s */
-        if (in == EOF) {
-                *C = 1;
-        } else {
-                *C = in;
-        }
-}
-
-/* Input: register C
-   Command #10 in spec. Displays whatever is in C to stdout */
-void output(uint32_t *C)
-{
-        /* char's range is 0 ~ 255 as detailed in spec */
-        printf("%c", (char)*C);
-}
-
-/* Input: registers A, B, C
-   Command #0 in spec. Moves B into A unless C is 0 */
-void cond_move(uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        if (*C != 0) {
-                *A = *B;
-        }
-}
-
-/* Input: 
-   Command #7 in spec. Halts the program by exiting with EXIT_SUCCESS */
-void halt()
-{
-        exit(EXIT_SUCCESS);
 }

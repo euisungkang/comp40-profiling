@@ -30,17 +30,9 @@ void Seg_Free(Segment *segmem);
 void store(Segment, uint32_t *, uint32_t *, uint32_t *);
 void load(Segment, uint32_t *, uint32_t, uint32_t);
 void load_program(Segment, uint32_t *, uint32_t *, uint32_t *);
-void load_value(uint32_t, uint32_t *);
 
 /* Mapping Operations */
 void map(Segment, uint32_t *, uint32_t *);
 void unmap(Segment, uint32_t *);
-
-/* I/O Operations */
-void input(uint32_t *C);
-void output(uint32_t *C);
-
-void cond_move(uint32_t *, uint32_t *, uint32_t *);
-void halt();
 
 #endif
