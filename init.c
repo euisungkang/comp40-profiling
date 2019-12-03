@@ -3,11 +3,11 @@ Easton Euisung Kang, Jonathan Liu
 Professor Monroe
 COMP-40
 
-PROJECT: um
+PROJECT: profiling
 FILE: init.c
-PURPOSE: Main program file. Handles UM initializations, instructions
+PURPOSE: Program file. Handles UM initializations, instructions
          and control flow.
-Last Modified: 11/19/2019
+Last Modified: 12/02/2019
 */
 
 #include <string.h>
@@ -86,15 +86,15 @@ int main(int argc, char *argv[])
                                                         CODE_LENGTH,
                                                         OPCODE_LSB);
                 if(code < 13) {
-                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
-                                                    A_LSB);
-                        B = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, 
-                                                    B_LSB);
-                        C = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
-                                                    C_LSB);
+                        A = (uint32_t) Bitpack_getu(zero[counter], 
+                                REG_LENGTH, A_LSB);
+                        B = (uint32_t) Bitpack_getu(zero[counter],
+                         REG_LENGTH, B_LSB);
+                        C = (uint32_t) Bitpack_getu(zero[counter], 
+                                REG_LENGTH, C_LSB);
                 } else {
-                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
-                                                                VAL_LENGTH);
+                        A = (uint32_t) Bitpack_getu(zero[counter], 
+                                REG_LENGTH, VAL_LENGTH);
                         value = (uint32_t) Bitpack_getu(zero[counter],
                                                     VAL_LENGTH, VAL_LSB);
                 }
@@ -122,11 +122,12 @@ int main(int argc, char *argv[])
                                 registers[A] = (registers[B] * registers[C]);
                                 break;
                         case 5:
-                                registers[A] = (uint32_t) floor(registers[B] /
-                                                                registers[C]);
+                                registers[A] = (uint32_t) floor(
+                                        registers[B] / registers[C]);
                                 break;
                         case 6:
-                                registers[A] = ~(registers[B] & registers[C]);
+                                registers[A] = ~(registers[B] &
+                                 registers[C]);
                                 break;
                         case 7:
                                 free(registers); 
@@ -138,10 +139,10 @@ int main(int argc, char *argv[])
                                 uint32_t id;
                                 if(Seq_length(segmem->unmapped) > 0) {
                                         id = *(uint32_t *) Seq_get(
-                                                            segmem->unmapped,
-                                                            Seq_length(
-                                                            segmem->unmapped)
-                                                            - 1);
+                                                        segmem->unmapped,
+                                                        Seq_length(
+                                                        segmem->unmapped)
+                                                        - 1);
                                         free(Seq_remhi(segmem->unmapped));
                                         uint32_t *seg = calloc((size + 1),
                                                         sizeof(uint32_t));
@@ -158,12 +159,13 @@ int main(int argc, char *argv[])
                                         seg[0] = size + 1;
                                         Seq_addhi(segmem->m, seg);
                                 }   
-                                registers[B] = id;                                
+                                registers[B] = id;
                                 break;
                         case 9:;
                                 uint32_t *id2 = malloc(sizeof(uint32_t));
                                 *id2 = registers[C];
-                                uint32_t *unused = Seq_get(segmem -> m, *id2);
+                                uint32_t *unused = Seq_get(segmem -> m,
+                                 *id2);
                                 free(unused);
                                 Seq_put(segmem -> m, *id2, NULL);
                                 Seq_addhi(segmem -> unmapped, (void *) id2);

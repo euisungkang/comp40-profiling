@@ -4,8 +4,8 @@
 CC = gcc
 
 IFLAGS  = -I/comp/40/build/include -I/usr/sup/cii40/include/cii
-CFLAGS  = -std=gnu99 -O3 -Wall -Wextra -Werror -pedantic $(IFLAGS)
-LDFLAGS = -L/comp/40/build/lib -L/usr/sup/cii40/lib64
+CFLAGS  = -g -std=gnu99 -O3 -Wall -Wextra -Werror -pedantic $(IFLAGS)
+LDFLAGS = -g -L/comp/40/build/lib -L/usr/sup/cii40/lib64
 LDLIBS  = -O2 -l40locality -lcii40-O2 -lm
 
 all: um
