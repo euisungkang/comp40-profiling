@@ -28,7 +28,6 @@ typedef struct Segment {
 }*Segment;
 
 void Seg_Free(Segment *);
-Segment Seg_New();
 
 int main(int argc, char *argv[])
 {
@@ -38,7 +37,11 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        Segment segmem = Seg_New();
+        Segment segmem = malloc(sizeof(Segment));
+        segmem -> m = Seq_new(0);
+        segmem -> unmapped = Seq_new(0);
+        segmem -> seg_count = 0;
+
         uint32_t *registers = calloc(8, sizeof(uint32_t));
         uint32_t counter = 1;
 
@@ -208,14 +211,4 @@ void Seg_Free(Segment *segmem)
         Seq_free(&((*segmem) -> unmapped));
 
         free(*segmem);
-}
-
-Segment Seg_New()
-{
-        Segment segmem = malloc(sizeof(struct Segment));
-        assert(segmem != NULL);
-        segmem -> m = Seq_new(0);
-        segmem -> unmapped = Seq_new(0);
-        segmem -> seg_count = 0;
-        return segmem;
 }
