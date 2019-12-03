@@ -12,7 +12,10 @@ Machine Used:
     Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
 
 Resource Intensive Routine:
-
+    Seq_get() takes up 21% of our performance according to KCachegrind. 
+    Therefore our store and load calls take up the most resources since they
+    use Seq_get to retrieve memory segments.
+    
 
 Time Analyzing: 8 hours
 Time Solving: 12 hours

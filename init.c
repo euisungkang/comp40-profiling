@@ -83,14 +83,20 @@ int main(int argc, char *argv[])
                 uint32_t value = 0;
                 
                 uint32_t code = (uint32_t) Bitpack_getu(zero[counter],
-                                                        CODE_LENGTH, OPCODE_LSB);
+                                                        CODE_LENGTH,
+                                                        OPCODE_LSB);
                 if(code < 13) {
-                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, A_LSB);
-                        B = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, B_LSB);
-                        C = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, C_LSB);
+                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
+                                                    A_LSB);
+                        B = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, 
+                                                    B_LSB);
+                        C = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
+                                                    C_LSB);
                 } else {
-                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, VAL_LENGTH);
-                        value = (uint32_t) Bitpack_getu(zero[counter], VAL_LENGTH, VAL_LSB);
+                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH,
+                                                                VAL_LENGTH);
+                        value = (uint32_t) Bitpack_getu(zero[counter],
+                                                    VAL_LENGTH, VAL_LSB);
                 }
 
                 switch(code) {
@@ -100,11 +106,13 @@ int main(int argc, char *argv[])
                                 }
                                 break;
                         case 1:;
-                                uint32_t *dup = Seq_get(segmem -> m, registers[B]);
+                                uint32_t *dup = Seq_get(segmem -> m,
+                                                        registers[B]);
                                 registers[A] = dup[registers[C] + 1];
                                 break;
                         case 2:;
-                                uint32_t *dest = Seq_get(segmem -> m, registers[A]);
+                                uint32_t *dest = Seq_get(segmem -> m,
+                                                        registers[A]);
                                 dest[registers[B] + 1] = registers[C];
                                 break;
                         case 3:
@@ -114,7 +122,8 @@ int main(int argc, char *argv[])
                                 registers[A] = (registers[B] * registers[C]);
                                 break;
                         case 5:
-                                registers[A] = (uint32_t) floor(registers[B] / registers[C]);
+                                registers[A] = (uint32_t) floor(registers[B] /
+                                                                registers[C]);
                                 break;
                         case 6:
                                 registers[A] = ~(registers[B] & registers[C]);
@@ -128,10 +137,14 @@ int main(int argc, char *argv[])
                                 int size = registers[C];
                                 uint32_t id;
                                 if(Seq_length(segmem->unmapped) > 0) {
-                                        id = *(uint32_t *) Seq_get(segmem->unmapped,
-                                                            Seq_length(segmem->unmapped) - 1);
+                                        id = *(uint32_t *) Seq_get(
+                                                            segmem->unmapped,
+                                                            Seq_length(
+                                                            segmem->unmapped)
+                                                            - 1);
                                         free(Seq_remhi(segmem->unmapped));
-                                        uint32_t *seg = calloc((size + 1), sizeof(uint32_t));
+                                        uint32_t *seg = calloc((size + 1),
+                                                        sizeof(uint32_t));
                                         assert(seg != NULL);
                                         seg[0] = size + 1;
                                         Seq_put(segmem -> m, id, seg);
@@ -139,7 +152,8 @@ int main(int argc, char *argv[])
                                 }else {
                                         id = segmem->seg_count;
                                         segmem->seg_count++;
-                                        uint32_t *seg = calloc((size + 1), sizeof(uint32_t));
+                                        uint32_t *seg = calloc((size + 1),
+                                                        sizeof(uint32_t));
                                         assert(seg != NULL);
                                         seg[0] = size + 1;
                                         Seq_addhi(segmem->m, seg);
@@ -175,11 +189,14 @@ int main(int argc, char *argv[])
                                         break;
                                 }
                                 free(Seq_get(segmem->m, 0));
-                                uint32_t *duplicate = Seq_get(segmem -> m, registers[B]);
+                                uint32_t *duplicate = Seq_get(segmem -> m,
+                                                        registers[B]);
                                 
                                 uint32_t size2 = duplicate[0];
-                                uint32_t *zero_seg = malloc(size2 * sizeof(uint32_t));
-                                memcpy(zero_seg, duplicate, size2 * sizeof(uint32_t));
+                                uint32_t *zero_seg = malloc(size2 *
+                                                        sizeof(uint32_t));
+                                memcpy(zero_seg, duplicate, size2 *
+                                                        sizeof(uint32_t));
 
                                 Seq_put(segmem->m, 0, zero_seg);
                                 counter = registers[C] + 1;
