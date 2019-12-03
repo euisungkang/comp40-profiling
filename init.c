@@ -20,7 +20,15 @@ Last Modified: 11/19/2019
 #include "bitpack.h"
 #include <seq.h>
 #include <sys/stat.h>
-#include "instructions.h"
+
+typedef struct Segment {
+        Seq_T m;
+        Seq_T unmapped;
+        int seg_count;
+}*Segment;
+
+void Seg_Free(Segment *);
+Segment Seg_New();
 
 int main(int argc, char *argv[])
 {
@@ -173,9 +181,6 @@ int main(int argc, char *argv[])
                                 break;
                 }
 
-
-
-
                 if(code != 12) {
                         (counter)++;
                 } else {
@@ -186,4 +191,31 @@ int main(int argc, char *argv[])
 
         free(registers);
         exit(EXIT_SUCCESS);
+}
+
+void Seg_Free(Segment *segmem)
+{
+        while(Seq_length((*segmem) -> m) > 0) {
+                uint32_t *temp = (uint32_t *)Seq_remhi((*segmem) -> m);
+                if (temp != NULL) {
+                        free(temp);
+                }
+        }
+        Seq_free(&((*segmem)) -> m);
+        while(Seq_length((*segmem) -> unmapped) > 0) {
+                free((uint32_t *)Seq_remhi((*segmem) -> unmapped));
+        }
+        Seq_free(&((*segmem) -> unmapped));
+
+        free(*segmem);
+}
+
+Segment Seg_New()
+{
+        Segment segmem = malloc(sizeof(struct Segment));
+        assert(segmem != NULL);
+        segmem -> m = Seq_new(0);
+        segmem -> unmapped = Seq_new(0);
+        segmem -> seg_count = 0;
+        return segmem;
 }

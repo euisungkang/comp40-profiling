@@ -10,7 +10,7 @@ LDLIBS  = -O2 -lbitpack -l40locality -lcii40-O2 -lm
 
 all: um
 
-um: init.o instructions.o
+um: init.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 # To get *any* .o file, compile its .c file with the following rule.
