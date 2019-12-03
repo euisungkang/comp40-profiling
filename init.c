@@ -174,11 +174,14 @@ int main(int argc, char *argv[])
                                         counter = registers[C] + 1;
                                         break;
                                 }
-                                uint32_t *zero_seg = Seq_get(segmem->m, 0);
+                                free(Seq_get(segmem->m, 0));
                                 uint32_t *duplicate = Seq_get(segmem -> m, registers[B]);
-                                zero_seg = realloc(zero_seg, duplicate[0]);
-                                memcpy(zero_seg, duplicate, duplicate[0] * sizeof(uint32_t));
+                                
+                                uint32_t size2 = duplicate[0];
+                                uint32_t *zero_seg = malloc(size2 * sizeof(uint32_t));
+                                memcpy(zero_seg, duplicate, size2 * sizeof(uint32_t));
 
+                                Seq_put(segmem->m, 0, zero_seg);
                                 counter = registers[C] + 1;
                                 break;
                         case 13:
