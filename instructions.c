@@ -51,25 +51,6 @@ void Seg_Free(Segment *segmem)
         free(*segmem);
 }
 
-/* Store/Load Operations */
-/* Input: segmem, registers A, B, C
-   Command #2 in spec. Stores a given value C in m[A][B] */
-void store(Segment segmem, uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        uint32_t *destination = (uint32_t *) Seq_get(segmem -> m, *A);
-        assert(destination != NULL);
-        destination[*B + 1] = *C;
-}
-
-/* Input: segmem, registers A, B, C 
-   Command #1 in spec. Loads the value m[B][C] into A */
-void load(Segment segmem, uint32_t *A, uint32_t B, uint32_t C)
-{
-        assert(A != NULL);
-        uint32_t *duplicate = Seq_get(segmem -> m, B);
-        *A = duplicate[C+1];    /* +1 since index 0 holds the size of array */
-}
-
 /* Input: segmem, prog counter, registers B, C
    Command #12 in spec. Loads a new program B into segmem. counter
    is set to m[0][C]        */

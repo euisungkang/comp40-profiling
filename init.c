@@ -149,7 +149,20 @@ int main(int argc, char *argv[])
                                 registers[C] = in;
                                 break;
                         case 12:
-                                load_program(segmem, &counter, &registers[B], &registers[C]);
+                                if (registers[B] == 0) {
+                                        counter = registers[C] + 1;
+                                        break;
+                                }
+                                free(Seq_get(segmem->m, 0));
+                                uint32_t *duplicate = Seq_get(segmem -> m, registers[B]);
+                                
+                                uint32_t size2 = duplicate[0];
+                                uint32_t *zero_seg = malloc(size2 * sizeof(uint32_t));
+                                memcpy(zero_seg, duplicate, size2 * sizeof(uint32_t));
+
+                                Seq_put(segmem->m, 0, zero_seg);
+
+                                counter = registers[C] + 1;
                                 break;
                         case 13:
                                 registers[A] = value;

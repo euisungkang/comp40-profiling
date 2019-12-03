@@ -27,8 +27,6 @@ Segment Seg_New();
 void Seg_Free(Segment *segmem);
 
 /* Store/Load Operations */
-void store(Segment, uint32_t *, uint32_t *, uint32_t *);
-void load(Segment, uint32_t *, uint32_t, uint32_t);
 void load_program(Segment, uint32_t *, uint32_t *, uint32_t *);
 
 #endif
