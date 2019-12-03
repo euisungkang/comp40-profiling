@@ -31,8 +31,4 @@ void store(Segment, uint32_t *, uint32_t *, uint32_t *);
 void load(Segment, uint32_t *, uint32_t, uint32_t);
 void load_program(Segment, uint32_t *, uint32_t *, uint32_t *);
 
-/* Mapping Operations */
-void map(Segment, uint32_t *, uint32_t *);
-void unmap(Segment, uint32_t *);
-
 #endif

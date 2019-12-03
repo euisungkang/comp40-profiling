@@ -60,51 +60,6 @@ void Seg_Load_Program(Segment segmem, uint32_t *counter, uint32_t *B,
         *counter = *C + 1;
 }
 
-/* Input: segmem, registers A, B, C
-   Stores value in C to m[A][B] */
-void Seg_Store(Segment segmem, uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        uint32_t *destination = (uint32_t *) Seq_get(segmem -> m, *A);
-        assert(destination != NULL);
-        destination[*B + 1] = *C;
-}
-
-/* Input: segmem, registers B, C 
-   Depending on whether parts of segmem are mapped or not, values will
-   be added to register m, and recorded in the mapped sequence */
-void Seg_Map(Segment segmem, uint32_t *B, uint32_t *C)
-{
-        int size = *C;
-        uint32_t id;
-        if(Seq_length(segmem->unmapped) > 0) {
-                id = *(uint32_t *) Seq_get(segmem->unmapped,
-                                    Seq_length(segmem->unmapped) - 1);
-                free(Seq_remhi(segmem->unmapped));
-                uint32_t *seg = calloc((size + 1), sizeof(uint32_t));
-                assert(seg != NULL);
-                seg[0] = size + 1;
-                Seq_put(segmem -> m, id, seg);
-
-        }else {
-                id = segmem->seg_count;
-                segmem->seg_count++;
-                uint32_t *seg = calloc((size + 1), sizeof(uint32_t));
-                assert(seg != NULL);
-                seg[0] = size + 1;
-                Seq_addhi(segmem->m, seg);
-        }   
-        *B = id;
-}
-void Seg_Unmap(Segment segmem, uint32_t *C)
-{
-        uint32_t *id = malloc(sizeof(uint32_t));
-        *id = *C;
-        uint32_t *unused = Seq_get(segmem -> m, *id);
-        free(unused);
-        Seq_put(segmem -> m, *id, NULL);
-        Seq_addhi(segmem -> unmapped, (void *) id);
-}
-
 /* Input: segmem *
    Frees all memory associated with the segmem given. Frees the
    segmem itself as well */
