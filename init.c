@@ -21,13 +21,23 @@ Last Modified: 11/19/2019
 #include <seq.h>
 #include <sys/stat.h>
 
-typedef struct Segment {
+#define REG_LENGTH 3
+#define CODE_LENGTH 4
+#define A_LSB 6
+#define B_LSB 3
+#define C_LSB 0
+#define VAL_LSB 0
+#define OPCODE_LSB 28
+#define VAL_LENGTH 25
+#define T Segment
+
+typedef struct T {
         Seq_T m;
         Seq_T unmapped;
         int seg_count;
-}*Segment;
+}*T;
 
-void Seg_Free(Segment *);
+void Seg_Free(T *);
 
 int main(int argc, char *argv[])
 {
@@ -37,7 +47,7 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        Segment segmem = malloc(sizeof(Segment));
+        T segmem = malloc(sizeof(struct T));
         segmem -> m = Seq_new(0);
         segmem -> unmapped = Seq_new(0);
         segmem -> seg_count = 0;
@@ -74,14 +84,14 @@ int main(int argc, char *argv[])
                 uint32_t value = 0;
                 
                 uint32_t code = (uint32_t) Bitpack_getu(zero[counter],
-                                                        4, 28);
+                                                        CODE_LENGTH, OPCODE_LSB);
                 if(code < 13) {
-                        A = (uint32_t) Bitpack_getu(zero[counter], 3, 6);
-                        B = (uint32_t) Bitpack_getu(zero[counter], 3, 3);
-                        C = (uint32_t) Bitpack_getu(zero[counter], 3, 0);
+                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, A_LSB);
+                        B = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, B_LSB);
+                        C = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, C_LSB);
                 } else {
-                        A = (uint32_t) Bitpack_getu(zero[counter], 3, 25);
-                        value = (uint32_t) Bitpack_getu(zero[counter], 25, 0);
+                        A = (uint32_t) Bitpack_getu(zero[counter], REG_LENGTH, VAL_LENGTH);
+                        value = (uint32_t) Bitpack_getu(zero[counter], VAL_LENGTH, VAL_LSB);
                 }
 
                 switch(code) {
@@ -196,7 +206,7 @@ int main(int argc, char *argv[])
         exit(EXIT_SUCCESS);
 }
 
-void Seg_Free(Segment *segmem)
+void Seg_Free(T *segmem)
 {
         while(Seq_length((*segmem) -> m) > 0) {
                 uint32_t *temp = (uint32_t *)Seq_remhi((*segmem) -> m);
