@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        Segment segmem = malloc(sizeof(Segment));
+        Segment segmem = malloc(sizeof(struct Segment));
         segmem -> m = Seq_new(0);
         segmem -> unmapped = Seq_new(0);
         segmem -> seg_count = 0;
@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
                                 break;
                         case 7:
                                 free(registers); 
+                                Seg_Free(&segmem);
                                 exit(EXIT_SUCCESS);
                                 break;
                         case 8:;
@@ -164,14 +165,10 @@ int main(int argc, char *argv[])
                                         counter = registers[C] + 1;
                                         break;
                                 }
-                                free(Seq_get(segmem->m, 0));
+                                uint32_t *zero_seg = Seq_get(segmem->m, 0);
                                 uint32_t *duplicate = Seq_get(segmem -> m, registers[B]);
-                                
-                                uint32_t size2 = duplicate[0];
-                                uint32_t *zero_seg = malloc(size2 * sizeof(uint32_t));
-                                memcpy(zero_seg, duplicate, size2 * sizeof(uint32_t));
-
-                                Seq_put(segmem->m, 0, zero_seg);
+                                zero_seg = realloc(zero_seg, duplicate[0]);
+                                memcpy(zero_seg, duplicate, duplicate[0] * sizeof(uint32_t));
 
                                 counter = registers[C] + 1;
                                 break;
