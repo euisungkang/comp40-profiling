@@ -51,41 +51,6 @@ void Seg_Free(Segment *segmem)
         free(*segmem);
 }
 
-/* Arithmetic Operations */
-/* Input: registers A, B, C
-   Command #3 in spec. Add's the values of B and C, and puts it in A */
-void add(uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        assert(A != NULL);
-        *A = (*B + *C);
-}
-
-/* Input: registers A, B, C
-   Command #4 in spec. Multiplies the values B and C, and puts it in A */
-void multiply(uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        assert(A != NULL);
-        *A = (*B * *C);
-}
-
-/* Input: registers A, B, C
-   Command #5 in spec. Divides the values B and C, and puts it in A */
-void divide(uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        assert(A != NULL);
-        assert(*C != 0);
-
-        *A = (uint32_t) floor(*B / *C);
-}
-
-/* Input: registers A, B, C 
-   Command #6 in spec. Performs NAND bitwise operation on B and C */
-void NAND(uint32_t *A, uint32_t *B, uint32_t *C)
-{
-        assert(A != NULL);
-        *A = ~((*B) & (*C));
-}
-
 /* Store/Load Operations */
 /* Input: segmem, registers A, B, C
    Command #2 in spec. Stores a given value C in m[A][B] */

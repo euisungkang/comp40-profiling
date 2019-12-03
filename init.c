@@ -15,6 +15,7 @@ Last Modified: 11/19/2019
 #include <stdio.h>
 #include <stdint.h>
 #include <stdint.h>
+#include <math.h>
 #include "assert.h"
 #include "bitpack.h"
 #include <seq.h>
@@ -123,20 +124,16 @@ void run_instructions(UM um, short opcode, short A, short B,
                                 &um -> registers[B], &um -> registers[C]);
                         break;
                 case 3:
-                        add(&um -> registers[A], &um -> registers[B],
-                            &um -> registers[C]);
+                        um -> registers[A] = (um -> registers[B] + um -> registers[C]);
                         break;
                 case 4:
-                        multiply(&um -> registers[A], &um -> registers[B],
-                                 &um -> registers[C]);
+                        um -> registers[A] = (um -> registers[B] * um -> registers[C]);
                         break;
                 case 5:
-                        divide(&um -> registers[A], &um -> registers[B],
-                               &um -> registers[C]);
+                        um -> registers[A] = (uint32_t) floor(um -> registers[B] / um -> registers[C]);
                         break;
                 case 6:
-                        NAND(&um -> registers[A], &um -> registers[B],
-                             &um -> registers[C]);
+                        um -> registers[A] = ~(um -> registers[B] & um -> registers[C]);
                         break;
                 case 7:
                         UM_free(&um);

@@ -26,12 +26,6 @@ typedef struct Segment {
 Segment Seg_New();
 void Seg_Free(Segment *segmem);
 
-/* Arithmetic Operations */
-void add(uint32_t *, uint32_t *, uint32_t *);
-void multiply(uint32_t *, uint32_t *, uint32_t *);
-void divide(uint32_t *, uint32_t *, uint32_t *);
-void NAND(uint32_t *, uint32_t *, uint32_t *);
-
 /* Store/Load Operations */
 void store(Segment, uint32_t *, uint32_t *, uint32_t *);
 void load(Segment, uint32_t *, uint32_t, uint32_t);
