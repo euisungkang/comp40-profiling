@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         }
         fclose(input);
         
-        Seq_addhi(um->segmem->m, (void *) m0);
+        Seq_addhi(um->segmem->m, m0);
         um->segmem->seg_count++;
 
 
@@ -88,17 +88,15 @@ int main(int argc, char *argv[])
                 if(code != 12) {
                         (um->counter)++;
                 } else {
-                    zero = Seq_get(um->segmem->m, 0);
+                        zero = Seq_get(um->segmem->m, 0);
                 }
-
-
         }
         exit(EXIT_SUCCESS);
 }
 
 UM UM_new()
 {
-        UM um = (UM) malloc(sizeof(struct UM));
+        UM um = malloc(sizeof(struct UM));
         um -> segmem = Seg_New();
         um -> registers = calloc(8, sizeof(uint32_t));
         um -> counter = 1;
@@ -112,7 +110,6 @@ UM UM_new()
 void run_instructions(UM um, short opcode, short A, short B,
                         short C, uint32_t value)
 {
-        //printf("opcode: %d   A: %d   B: %d   C: %d   value: %u\n", opcode, um -> registers[A], um -> registers[B], um -> registers[C], value);
         switch(opcode) {
                 case 0:
                         cond_move(&um -> registers[A], &um -> registers[B],

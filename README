@@ -11,58 +11,8 @@ Machine Used:
     Halligan 116e used to run tests.
     Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
 
+Resource Intensive Routine:
 
 
-Implementation:
-    Everything works.
-    
-    In terms of design, our program matched our design well, except
-    instead of splitting up instructions into different modules
-    we combined it all into one module, and had a separate one
-    that managed segmentation memory. Also, instead of a sequence
-    of sequences, we used a sequence of arrays for segmentation
-    since the size of a segment is static.
-
-Architecture:
-    Our main UM is a struct that contains 8 registers, which are
-    uint32_t's, and 3 sequences, one for segments, ID's that are mapped,
-    and ID's that are unmapped. For segments, each element inserted into
-    the sequence is an array of uint32_t's that contains the memory
-    inside each segment. Each ID inside the 'mapped' sequence maps
-    to the same index in the sequence for segments. When an ID is unmapped,
-    it is added to the 'unmapped' sequence, and when map is called again,
-    unmapped ID's are prioritized. Sequences are used due to constant
-    time call for get calls. Arrays are used due to the size of segments
-    being constant. 
-
-
-Unit Test Specifications:
-
-    map.um - Tests for mapping function in um. Maps memory
-    and then outputs the ID, verifying that it has been mapped.
-    seg.um - Tests for segmentation loading and storing. Tests
-    store and load by mapping, storing, and then loading memory,
-    and then outputting them. Assumes map and unmap works.
-    map_unmap.um - Tests for unmapping function, assuming map
-    already works. Tests that after one segment is unmapped,
-    the ID is free to be used once another segment is mapped.
-    io.um - Tests for all input and output operations by taking
-    in input and outputting the same input.
-    op.um - Tests for basic operators like +, x, /, and verifies
-    basic arithmetic clauses.
-    nand.um - Tests for the nand bitwise operator for all values
-    of a and b.
-    cmov.um - Tests for the conditional move operator for both
-    true and false.
-    lprog.um - Tests for load program operator. Does this by
-    jumping to another portion of the program. Will
-    not print anything if load program does not work.
-    halt-verbose.um - Simply halts, testing halt.
-
-50 Million Instructions:
-    217,959.89537925 nanoseconds required to run. This number
-    was acquired off of the time it took our um to run 10 instructions.
-
-Time Analyzing: 1 hours
-Time Designing: 4 hours
-Time Programming: 15 hours
+Time Analyzing: 8 hours
+Time Solving: 12 hours
