@@ -17,7 +17,6 @@ Last Modified: 11/19/2019
 #include <stdint.h>
 #include <math.h>
 #include "assert.h"
-#include "bitpack.h"
 #include <seq.h>
 #include <sys/stat.h>
 
@@ -38,6 +37,7 @@ typedef struct T {
 }*T;
 
 void Seg_Free(T *);
+uint64_t Bitpack_getu(uint64_t word, unsigned width, unsigned lsb);
 
 int main(int argc, char *argv[])
 {
@@ -217,4 +217,17 @@ void Seg_Free(T *segmem)
         Seq_free(&((*segmem) -> unmapped));
 
         free(*segmem);
+}
+
+uint64_t Bitpack_getu(uint64_t word, unsigned width, unsigned lsb)
+{
+        assert(width <= 64);
+        assert((width + lsb) <= 64);
+        if (width == 0) {
+                return 0;
+        }
+
+        uint64_t temp = ~0;
+        temp = temp >> (64 - width) << lsb;
+        return (word & temp) >> lsb;
 }
