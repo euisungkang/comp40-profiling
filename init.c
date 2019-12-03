@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
                 fprintf(stderr, "Usage: ./um [program um file]\n");
                 exit(EXIT_FAILURE);
         }
-        Segment segmem = malloc(sizeof(struct Segment));
         T segmem = malloc(sizeof(struct T));
         segmem -> m = Seq_new(0);
         segmem -> unmapped = Seq_new(0);
