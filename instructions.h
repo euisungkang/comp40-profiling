@@ -11,10 +11,20 @@ Last Modified: 11/19/2019
 
 #include <stdio.h>
 #include <stdint.h>
-#include "segmem.h"
+#include <seq.h>
 
 #ifndef _INSTRUCTIONS_H_
 #define _INSTRUCTIONS_H_
+
+typedef struct Segment {
+        Seq_T m;
+        Seq_T unmapped;
+        int seg_count;
+        
+}*Segment;
+
+Segment Seg_New();
+void Seg_Free(Segment *segmem);
 
 /* Arithmetic Operations */
 void add(uint32_t *, uint32_t *, uint32_t *);

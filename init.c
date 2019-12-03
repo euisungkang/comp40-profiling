@@ -19,7 +19,6 @@ Last Modified: 11/19/2019
 #include "bitpack.h"
 #include <seq.h>
 #include <sys/stat.h>
-#include "segmem.h"
 #include "instructions.h"
 
 typedef struct UM {
