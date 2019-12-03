@@ -22,9 +22,6 @@ Last Modified: 11/19/2019
 #include <sys/stat.h>
 #include "instructions.h"
 
-/* Function Prototypes */
-void run_instructions(Segment, uint32_t *, uint32_t, short, short, short, short, uint32_t);
-
 int main(int argc, char *argv[])
 {
         (void) argv;
@@ -62,22 +59,88 @@ int main(int argc, char *argv[])
 
         uint32_t *zero = Seq_get(segmem->m, 0);
         while(counter < zero[0]) {
-                short ra = 0, rb = 0, rc = 0;
+                short A = 0, B = 0, C = 0;
                 uint32_t value = 0;
                 
                 uint32_t code = (uint32_t) Bitpack_getu(zero[counter],
                                                         4, 28);
                 if(code < 13) {
-                        ra = (uint32_t) Bitpack_getu(zero[counter], 3, 6);
-                        rb = (uint32_t) Bitpack_getu(zero[counter], 3, 3);
-                        rc = (uint32_t) Bitpack_getu(zero[counter], 3, 0);
+                        A = (uint32_t) Bitpack_getu(zero[counter], 3, 6);
+                        B = (uint32_t) Bitpack_getu(zero[counter], 3, 3);
+                        C = (uint32_t) Bitpack_getu(zero[counter], 3, 0);
                 }else {
-                        ra = (uint32_t) Bitpack_getu(zero[counter], 3, 25);
+                        A = (uint32_t) Bitpack_getu(zero[counter], 3, 25);
                         value = (uint32_t) Bitpack_getu(zero[counter],
                                                         25, 0);
                 }
 
-                run_instructions(segmem, registers, counter, code, ra, rb, rc, value);
+                switch(code) {
+                        case 0:
+                                if (registers[C] != 0) {
+                                        registers[A] = registers[B];
+                                }
+                                break;
+                        case 1:
+                                load(segmem, &registers[A],
+                                    registers[B], registers[C]);
+                                break;
+                        case 2:
+                                store(segmem, &registers[A],
+                                        &registers[B], &registers[C]);
+                                break;
+                        case 3:
+                                registers[A] = (registers[B] + registers[C]);
+                                break;
+                        case 4:
+                                registers[A] = (registers[B] * registers[C]);
+                                break;
+                        case 5:
+                                registers[A] = (uint32_t) floor(registers[B] / registers[C]);
+                                break;
+                        case 6:
+                                registers[A] = ~(registers[B] & registers[C]);
+                                break;
+                        case 7:
+                                free(registers); 
+                                exit(EXIT_SUCCESS);
+                                break;
+                        case 8:
+                                map(segmem, &registers[B],
+                                        &registers[C]);
+                                break;
+                        case 9:
+                                unmap(segmem, &registers[C]);
+                                break;
+                        case 10:
+                                printf("%c", (char)registers[C]);
+                                break;
+                        case 11:
+                                ;
+                                char in = (char) getc(stdin);
+                                if (in == '\n') {
+                                        in = (char) getc(stdin);
+                                }
+                                if (in == EOF) {
+                                        registers[C] = 1;
+                                        break;
+                                }
+                                registers[C] = in;
+                                break;
+                        case 12:
+                                load_program(segmem, &counter, &registers[B], &registers[C]);
+                                break;
+                        case 13:
+                                registers[A] = value;
+                                break;
+                        default:
+                                fprintf(stderr, "Invalid Instruction\n");
+                                exit(EXIT_FAILURE);
+                                break;
+                }
+
+
+
+
                 if(code != 12) {
                         (counter)++;
                 } else {
@@ -88,76 +151,4 @@ int main(int argc, char *argv[])
 
         free(registers);
         exit(EXIT_SUCCESS);
-}
-
-/* Input: UM, opcode, register index A, B, C, value
-   Determines which instruction is run through the opcode. A, B, C
-   are passed in as actual register addresses. Entire condition structure
-   is switch cases */
-void run_instructions(Segment segmem, uint32_t *reg, uint32_t counter, short opcode, short A, short B,
-                        short C, uint32_t value)
-{
-        switch(opcode) {
-                case 0:
-                        if (reg[C] != 0) {
-                                reg[A] = reg[B];
-                        }
-                        break;
-                case 1:
-                        load(segmem, &reg[A],
-                            reg[B], reg[C]);
-                        break;
-                case 2:
-                        store(segmem, &reg[A],
-                                &reg[B], &reg[C]);
-                        break;
-                case 3:
-                        reg[A] = (reg[B] + reg[C]);
-                        break;
-                case 4:
-                        reg[A] = (reg[B] * reg[C]);
-                        break;
-                case 5:
-                        reg[A] = (uint32_t) floor(reg[B] / reg[C]);
-                        break;
-                case 6:
-                        reg[A] = ~(reg[B] & reg[C]);
-                        break;
-                case 7:
-                        free(reg); 
-                        exit(EXIT_SUCCESS);
-                        break;
-                case 8:
-                        map(segmem, &reg[B],
-                                &reg[C]);
-                        break;
-                case 9:
-                        unmap(segmem, &reg[C]);
-                        break;
-                case 10:
-                        printf("%c", (char)reg[C]);
-                        break;
-                case 11:
-                        ;
-                        char in = (char) getc(stdin);
-                        if (in == '\n') {
-                                in = (char) getc(stdin);
-                        }
-                        if (in == EOF) {
-                                reg[C] = 1;
-                                break;
-                        }
-                        reg[C] = in;
-                        break;
-                case 12:
-                        load_program(segmem, &counter, &reg[B], &reg[C]);
-                        break;
-                case 13:
-                        reg[A] = value;
-                        break;
-                default:
-                        fprintf(stderr, "Invalid Instruction\n");
-                        exit(EXIT_FAILURE);
-                        break;
-        }
 }
